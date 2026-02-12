@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sober Sidekick News Reel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px 20px;
+        }
+        
+        .logo {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+        
+        .button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .button.primary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #667eea;
+        }
+        
+        .button.primary:hover {
+            background: white;
+            color: #5a67d8;
+        }
+        
+        .features {
+            margin-top: 50px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .logo {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🌟</div>
+        <h1>Sober Sidekick News Reel</h1>
+        <p class="subtitle">
+            Hope-focused recovery content with professional editorial management.<br>
+            Complete system with content curation and mobile news feed.
+        </p>
+        
+        <div class="buttons">
+            <a href="./newsfeed/" class="button primary">📱 View News Feed</a>
+            <a href="./dashboard/" class="button">⚙️ Editorial Dashboard</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>📱 Mobile News Feed</h3>
+                <p>TikTok-style interface with recovery articles, videos, and hope ratings. Optimized for mobile viewing.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>⚙️ Editorial Dashboard</h3>
+                <p>Complete content management system. Add, edit, and publish recovery-focused articles and videos.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>⭐ Hope Rating System</h3>
+                <p>Every piece of content includes a hope rating (1-5 stars) to help users find the most uplifting content.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>🎯 Recovery Focus</h3>
+                <p>All content is carefully curated to support addiction recovery with research, stories, and motivation.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
