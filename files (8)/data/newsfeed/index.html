@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sober Sidekick - News Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fafafa;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 20px 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 3px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            padding: 10px 15px;
+            border-radius: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 0;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            margin-bottom: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .content-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .type-research {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .type-story {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .type-video {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .type-policy {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .type-innovation {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hope-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+
+        .stars {
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .card-content {
+            padding: 0 20px 20px;
+        }
+
+        .card-text {
+            line-height: 1.6;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .read-time {
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .author {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Video Cards */
+        .video-card {
+            position: relative;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .header {
+                padding: 15px 15px 10px;
+            }
+
+            .card-header,
+            .card-content {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .card-title {
+                font-size: 16px;
+            }
+        }
+
+        /* Hide content initially */
+        .content-card {
+            display: none;
+        }
+
+        .content-card.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">🌟 Sober Sidekick</div>
+            <a href="../" class="back-btn">← Back</a>
+        </div>
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-filter="all">All <span id="count-all">(0)</span></button>
+            <button class="tab-btn" data-filter="read">Read <span id="count-read">(0)</span></button>
+            <button class="tab-btn" data-filter="watch">Watch <span id="count-watch">(0)</span></button>
+        </nav>
+    </header>
+
+    <main class="content" id="content">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading hope-focused content...</p>
+        </div>
+    </main>
+
+    <script>
+        let allContent = [];
+        let currentFilter = 'all';
+
+        // Load content from JSON
+        async function loadContent() {
+            try {
+                const response = await fetch('../data/content.json');
+                const data = await response.json();
+                allContent = data.content.filter(item => item.status === 'published');
+                
+                // Sort by published date (newest first)
+                allContent.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+                
+                updateCounts();
+                renderContent();
+                document.getElementById('loading').style.display = 'none';
+            } catch (error) {
+                console.error('Error loading content:', error);
+                // Fallback to local sample data
+                loadFallbackContent();
+            }
+        }
+
+        // Fallback content if JSON fails to load
+        function loadFallbackContent() {
+            allContent = [
+                {
+                    id: 'item_001',
+                    title: 'Breakthrough Research: Brain Healing Continues Years Into Recovery',
+                    type: 'research',
+                    content: 'New neuroplasticity studies show the brain continues healing and building new pathways well into long-term recovery. This groundbreaking research offers hope for anyone wondering if it\'s "too late" to heal.',
+                    hopeRating: 4,
+                    author: 'Dr. Sarah Chen',
+                    readTime: '4 min read',
+                    publishedAt: '2025-01-15T08:00:00Z'
+                },
+                {
+                    id: 'item_002',
+                    title: 'Daily Motivation: You Are Stronger Than You Know',
+                    type: 'video',
+                    content: 'A powerful 3-minute reminder that every day you choose recovery, you\'re proving your incredible strength. Your journey matters, and your progress is real.',
+                    hopeRating: 5,
+                    author: 'Recovery Support Team',
+                    readTime: '3 min watch',
+                    publishedAt: '2025-01-14T12:00:00Z'
+                },
+                {
+                    id: 'item_003',
+                    title: 'Sarah\'s 5-Year Recovery Story: From Crisis to Purpose',
+                    type: 'story',
+                    content: 'Sarah shares her raw, honest journey from rock bottom to finding her calling as a recovery coach. Her story proves that our darkest moments can become our greatest strength.',
+                    hopeRating: 5,
+                    author: 'Sarah Martinez',
+                    readTime: '6 min read',
+                    publishedAt: '2025-01-13T10:30:00Z'
+                },
+                {
+                    id: 'item_004',
+                    title: 'Quick Mindfulness Exercise for Difficult Moments',
+                    type: 'video',
+                    content: 'Learn the "5-4-3-2-1" grounding technique that thousands use to navigate cravings, anxiety, and overwhelming emotions. Practice it anywhere, anytime.',
+                    hopeRating: 4,
+                    author: 'Mindfulness Center',
+                    readTime: '5 min watch',
+                    publishedAt: '2025-01-12T16:00:00Z'
+                },
+                {
+                    id: 'item_005',
+                    title: 'New Policy: Insurance Coverage Expansion for Addiction Treatment',
+                    type: 'policy',
+                    content: 'Major insurance providers announce expanded coverage for addiction treatment, including residential care and ongoing therapy. Here\'s what this means for you.',
+                    hopeRating: 4,
+                    author: 'Healthcare Policy Team',
+                    readTime: '5 min read',
+                    publishedAt: '2025-01-11T09:00:00Z'
+                },
+                {
+                    id: 'item_006',
+                    title: 'Morning Recovery Meditation: Start Your Day with Intention',
+                    type: 'video',
+                    content: 'A gentle 10-minute guided meditation designed specifically for people in recovery. Set a positive tone for your day and strengthen your commitment to healing.',
+                    hopeRating: 5,
+                    author: 'Peaceful Recovery',
+                    readTime: '10 min watch',
+                    publishedAt: '2025-01-10T07:00:00Z'
+                },
+                {
+                    id: 'item_007',
+                    title: 'Family Healing: How Recovery Transforms Relationships',
+                    type: 'story',
+                    content: 'Marcus explains how his recovery didn\'t just heal him—it restored trust with his children and taught his whole family healthier ways to communicate and connect.',
+                    hopeRating: 4,
+                    author: 'Marcus Thompson',
+                    readTime: '7 min read',
+                    publishedAt: '2025-01-09T14:00:00Z'
+                },
+                {
+                    id: 'item_008',
+                    title: 'Innovation Spotlight: AI-Powered Recovery Coaching Apps',
+                    type: 'innovation',
+                    content: 'Explore the latest technology helping people maintain sobriety, from 24/7 digital coaches to peer support networks that connect you with others who understand your journey.',
+                    hopeRating: 3,
+                    author: 'Tech Innovation Team',
+                    readTime: '6 min read',
+                    publishedAt: '2025-01-08T11:00:00Z'
+                }
+            ];
+            
+            updateCounts();
+            renderContent();
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Update tab counts
+        function updateCounts() {
+            const all = allContent.length;
+            const read = allContent.filter(item => ['research', 'story', 'policy', 'innovation'].includes(item.type)).length;
+            const watch = allContent.filter(item => item.type === 'video').length;
+
+            document.getElementById('count-all').textContent = `(${all})`;
+            document.getElementById('count-read').textContent = `(${read})`;
+            document.getElementById('count-watch').textContent = `(${watch})`;
+        }
+
+        // Generate stars for hope rating
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += i <= rating ? '⭐' : '☆';
+            }
+            return stars;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        // Create content card
+        function createContentCard(item) {
+            const isVideo = item.type === 'video';
+            const videoContent = isVideo ? `
+                <div class="video-placeholder">
+                    ▶️
+                </div>
+            ` : '';
+
+            return `
+                <article class="content-card ${isVideo ? 'video-card' : ''}" data-type="${item.type}">
+                    <div class="card-header">
+                        <span class="content-type type-${item.type}">${item.type}</span>
+                        <h2 class="card-title">${item.title}</h2>
+                        <div class="card-meta">
+                            <div class="hope-rating">
+                                <span class="stars">${generateStars(item.hopeRating)}</span>
+                                <span>Hope Rating</span>
+                            </div>
+                            <span class="date">${formatDate(item.publishedAt)}</span>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        ${videoContent}
+                        <p class="card-text">${item.content}</p>
+                        <div class="card-footer">
+                            <span class="read-time">${item.readTime}</span>
+                            <span class="author">by ${item.author}</span>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        // Render content based on current filter
+        function renderContent() {
+            let filteredContent = allContent;
+
+            if (currentFilter === 'read') {
+                filteredContent = allContent.filter(item => 
+                    ['research', 'story', 'policy', 'innovation'].includes(item.type)
+                );
+            } else if (currentFilter === 'watch') {
+                filteredContent = allContent.filter(item => item.type === 'video');
+            }
+
+            const contentContainer = document.getElementById('content');
+            
+            if (filteredContent.length === 0) {
+                contentContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No content available</h3>
+                        <p>Check back soon for new ${currentFilter === 'all' ? '' : currentFilter} content!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const contentHTML = filteredContent.map(createContentCard).join('');
+            contentContainer.innerHTML = contentHTML;
+
+            // Show cards with animation
+            const cards = contentContainer.querySelectorAll('.content-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 100);
+            });
+        }
+
+        // Tab switching
+        function setupTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all tabs
+                    tabBtns.forEach(tab => tab.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    btn.classList.add('active');
+                    
+                    // Update current filter
+                    currentFilter = btn.dataset.filter;
+                    
+                    // Re-render content
+                    renderContent();
+                });
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setupTabs();
+            loadContent();
+        });
+    </script>
+</body>
+</html>
